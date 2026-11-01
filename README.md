@@ -1,5 +1,30 @@
 # QMK Userspace
 
+## Banime40 keymap
+
+Keymap `tungvu` for `sporewoh/banime40` (Pro Micro, ATmega32U4, Caterina bootloader, VIA enabled). The `Build QMK firmware` workflow produces `sporewoh_banime40_tungvu.hex`.
+
+### Flashing
+
+1. Download the `.hex` from the workflow run's artifacts (or the Releases tab).
+1. Put the keyboard in the bootloader:
+    * Hold `Q` (matrix position 0,0) while plugging in the keyboard, or
+    * press the reset button on the back of the PCB (or short RST to GND twice).
+1. Find the serial port: `ls /dev/cu.usbmodem*`
+1. Flash within about 8 seconds, before Caterina leaves the bootloader:
+    ```
+    avrdude -p atmega32u4 -c avr109 -P /dev/cu.usbmodemXXXX -U flash:w:$HOME/Downloads/sporewoh_banime40_tungvu.hex:i
+    ```
+    * Install avrdude with `brew install avrdude`.
+    * The port name can change after each reset, so list it again each time.
+    * QMK Toolbox bundles an x86-only avrdude, which needs Rosetta on Apple Silicon.
+
+### VIA
+
+`via/banime40.v3.json` is the V3 draft definition (vendorId `0xBEAF`, productId `0x0001`). In [usevia.app](https://usevia.app), enable the Design tab in Settings, load the file under Design, then reconnect the keyboard.
+
+## About this userspace
+
 This is a template repository which allows for an external set of QMK keymaps to be defined and compiled. This is useful for users who want to maintain their own keymaps without having to fork the [main QMK repository](https://github.com/qmk/qmk_firmware). You must still fork the main QMK repository if writing firmware for a *new* keyboard.
 
 ## Howto configure your build targets
