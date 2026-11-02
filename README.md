@@ -6,17 +6,16 @@ Keymap `tungvu` for `sporewoh/banime40` (Pro Micro, ATmega32U4, Caterina bootloa
 
 ### Flashing
 
-1. Download the `.hex` from the workflow run's artifacts (or the Releases tab).
-1. Put the keyboard in the bootloader:
-    * Hold `Q` (matrix position 0,0) while plugging in the keyboard, or
-    * press the reset button on the back of the PCB (or short RST to GND twice).
-1. Find the serial port: `ls /dev/cu.usbmodem*`
-1. Flash within about 8 seconds, before Caterina leaves the bootloader:
+1. Download the `.hex` from the Releases tab (or the workflow run's artifacts) into `~/Downloads`.
+1. Run this, then put the keyboard in the bootloader. It waits for the port and flashes as soon as it appears:
     ```
-    avrdude -p atmega32u4 -c avr109 -P /dev/cu.usbmodemXXXX -U flash:w:$HOME/Downloads/sporewoh_banime40_tungvu.hex:i
+    until p=$(ls /dev | grep -m1 '^cu\.usbmodem'); [ -n "$p" ]; do sleep 0.2; done; avrdude -p atmega32u4 -c avr109 -P "/dev/$p" -U flash:w:$HOME/Downloads/sporewoh_banime40_tungvu.hex:i
     ```
+    * Bootloader entry (Caterina leaves it after about 8 seconds):
+        * Hold layer 2 and press the top-left key (`QK_BOOT`), or
+        * hold `Q` (matrix position 0,0) while plugging in the keyboard, or
+        * press the reset button on the back of the PCB (or short RST to GND twice).
     * Install avrdude with `brew install avrdude`.
-    * The port name can change after each reset, so list it again each time.
     * QMK Toolbox bundles an x86-only avrdude, which needs Rosetta on Apple Silicon.
 
 ### VIA
